@@ -4,10 +4,16 @@
 #include <time.h>
 #include <math.h>
 
-#define S_SMALL 1000
-#define S_MEDIUM 50000
-#define S_LARGE 500000
 #define NUM_RUNS 30
+
+// Novos tamanhos mais granulares
+#define S_XSMALL   100
+#define S_SMALL    1000
+#define S_MSMALL   10000
+#define S_MEDIUM   50000
+#define S_MLARGE   100000
+#define S_LARGE    500000
+#define S_XLARGE   1000000
 
 int* gerar_dados(int size) {
     int* arr = (int*)malloc(size * sizeof(int));
@@ -57,15 +63,19 @@ int main() {
     } TestCase;
 
     TestCase test_cases[] = {
-        {S_SMALL, "Dados_Pequenos"},
-        {S_MEDIUM, "Dados_Medios"},
-        {S_LARGE, "Dados_Grandes"}
+        {S_XSMALL, "Muito_Pequeno"},
+        {S_SMALL,  "Pequeno"},
+        {S_MSMALL, "Medio_Pequeno"},
+        {S_MEDIUM, "Medio"},
+        {S_MLARGE, "Medio_Grande"},
+        {S_LARGE,  "Grande"},
+        {S_XLARGE, "Muito_Grande"}
     };
     int num_test_cases = sizeof(test_cases) / sizeof(TestCase);
 
-    printf("--- Testes de Quick Sort em C ---\n");
-    printf("%-20s | %-7s | %-16s | %-17s\n", "Cenario", "Tamanho", "Media Tempo (ms)", "Desvio Padrao (ms)");
-    printf("---------------------|---------|------------------|-------------------\n");
+    printf("--- Testes de Quick Sort em C (O(n log n)) ---\n");
+    printf("%-20s | %-10s | %-16s | %-17s\n", "Cenário", "Tamanho", "Média Tempo (ms)", "Desvio Padrão (ms)");
+    printf("----------------------|------------|------------------|-------------------\n");
 
     for (int i = 0; i < num_test_cases; i++) {
         int size = test_cases[i].size;
@@ -104,7 +114,7 @@ int main() {
         }
         double desvio = sqrt(soma_quadrados / (NUM_RUNS - 1));
 
-        printf("%-20s | %-7d | %16.4f | %17.4f\n", name, size, media, desvio);
+        printf("%-20s | %-10d | %16.4f | %17.4f\n", name, size, media, desvio);
     }
 
     return 0;
