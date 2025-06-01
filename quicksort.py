@@ -1,16 +1,21 @@
 import time
 import math
 import random
+import sys
 
 # Tamanhos dos arrays
 S_XSMALL = 100
-S_SMALL = 1000
-S_MSMALL = 10000
-S_MEDIUM = 50000
-S_MLARGE = 100000
-S_LARGE = 500000
-S_XLARGE = 1000000
-NUM_RUNS = 30
+S_SMALL = 500
+S_MSMALL = 1000
+S_MEDIUM = 5000
+S_MLARGE = 10000
+S_LARGE = 50000
+S_XLARGE = 100000
+NUM_RUNS = 15
+
+
+new_recursion_limit = S_XLARGE + 10000 # e.g., 1,010,000
+sys.setrecursionlimit(new_recursion_limit)
 
 # Gerador de dados aleatórios
 def gerar_dados(tamanho):

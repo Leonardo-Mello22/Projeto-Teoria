@@ -4,16 +4,16 @@
 #include <time.h>
 #include <math.h>
 
-#define NUM_RUNS 30
+#define NUM_RUNS 15
 
 // Novos tamanhos mais granulares
 #define S_XSMALL   100
-#define S_SMALL    1000
-#define S_MSMALL   10000
-#define S_MEDIUM   50000
-#define S_MLARGE   100000
-#define S_LARGE    500000
-#define S_XLARGE   1000000
+#define S_SMALL    500
+#define S_MSMALL   1000
+#define S_MEDIUM   5000
+#define S_MLARGE   10000
+#define S_LARGE    50000
+#define S_XLARGE   100000
 
 // Estrutura para os casos de teste
 typedef struct {
@@ -70,15 +70,17 @@ int partition(int arr[], int low, int high) {
     return i + 1; // Retorna o índice de partição
 }
 
-// Função principal do Quick Sort
+// Função principal do Quick Sort (Otimizada para profundidade de recursão O(log n))
 void quickSort(int arr[], int low, int high) {
-    if (low < high) {
-        // pi é o índice de partição, arr[pi] está agora no lugar certo
+    while (low < high) {
         int pi = partition(arr, low, high);
-
-        // Ordena separadamente os elementos antes e depois da partição
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
+        if ((pi - low) < (high - pi)) {
+            quickSort(arr, low, pi - 1);
+            low = pi + 1;         
+        } else {
+            quickSort(arr, pi + 1, high); 
+            high = pi - 1;              
+        }
     }
 }
 
@@ -117,12 +119,8 @@ int main() {
             int* temp_arr = (int*)malloc(size * sizeof(int));
             if (temp_arr == NULL) {
                 perror("Erro ao alocar memória para temp_arr (caso médio)");
-                free(base_data_medio); // Libera a memória alocada anteriormente
-                // Poderia adicionar um tratamento de erro mais robusto aqui
-                // ou pular para o próximo caso de teste
-                if (i < num_test_cases -1) { // se não for o último caso de teste
-                    // Tenta continuar com o próximo caso de teste se a alocação falhar
-                    // mas alerta sobre o problema.
+                free(base_data_medio);
+                if (i < num_test_cases -1) { 
                     fprintf(stderr, "Pulando para o proximo caso de teste devido a falha de alocacao.\n");
                     goto next_test_case_medio; 
                 } else {
@@ -131,18 +129,18 @@ int main() {
             }
             memcpy(temp_arr, base_data_medio, size * sizeof(int));
 
-            clock_t start_time = clock(); // Marca o tempo de início
-            quickSort(temp_arr, 0, size - 1); // Executa o Quick Sort
-            clock_t end_time = clock();   // Marca o tempo de fim
+            clock_t start_time = clock(); 
+            quickSort(temp_arr, 0, size - 1); 
+            clock_t end_time = clock();  
 
             // Calcula o tempo decorrido em milissegundos
             tempos[r] = ((double)(end_time - start_time)) * 1000.0 / CLOCKS_PER_SEC;
 
-            free(temp_arr); // Libera a memória do array temporário
+            free(temp_arr); 
         }
         
-        next_test_case_medio: // Label para o goto em caso de falha de alocação
-        free(base_data_medio); // Libera a memória dos dados base
+        next_test_case_medio:
+        free(base_data_medio); 
 
         // Calcula a média dos tempos
         double soma_tempos = 0.0;
